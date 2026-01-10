@@ -10,7 +10,6 @@ import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
-    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -32,6 +31,7 @@ import { RolesModule } from './roles/roles.module';
     AuthModule,
     PermissionsModule,
     RolesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
