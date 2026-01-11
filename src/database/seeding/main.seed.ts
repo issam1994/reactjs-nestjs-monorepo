@@ -1,31 +1,38 @@
-import { faker } from '@faker-js/faker';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
-import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import PermissionsFactory from './factories/permissions.factory';
+import RolesFactory from './factories/roles.factory';
+import UsersFactory from './factories/users.factory';
 
 async function bootstrap() {
   console.log('seeding app starts....');
   const app = await NestFactory.create(AppModule);
-  const userRepository = app.get<Repository<User>>(getRepositoryToken(User));
-  // seed users
-  console.log('seeding users starts....');
-  try {
-    await userRepository.save(
-      new Array(10).fill(null).map(() => ({
-        email: faker.internet.email(),
-        password: bcrypt.hashSync('password', 10),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        gender: 'male',
-        mobileNumber: faker.phone.number(),
-      })),
-    );
-    console.log('seeding users finished....');
-  } catch (e) {
-    console.log('seeding users error...', e);
+  // order is important :)
+  const factories = [
+    {
+      name: 'permissions',
+      seeder: new PermissionsFactory(app),
+    },
+    {
+      name: 'roles',
+      seeder: new RolesFactory(app),
+    },
+    {
+      name: 'users',
+      seeder: new UsersFactory(app),
+    },
+  ];
+  // loop through seeders
+  for (const factory of factories) {
+    console.log(`seeding ${factory.name} starts`);
+    try {
+      await factory.seeder.run();
+      // seeding ended
+      console.log(`seeding ${factory.name} finished`);
+    } catch (e) {
+      // seeding error
+      console.error(`seeding ${factory.name} error`, e);
+    }
   }
   // close seeding app
   console.log('seeding app closing....');

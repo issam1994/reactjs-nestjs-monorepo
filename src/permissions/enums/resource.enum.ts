@@ -1,5 +1,5 @@
 export enum ResourceEnum {
-  PERMISSIONS = 'permissions',
-  ROLES = 'roles',
-  USERS = 'users',
+  PERMISSION = 'permission',
+  ROLE = 'role',
+  USER = 'user',
 }
