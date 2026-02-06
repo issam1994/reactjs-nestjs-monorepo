@@ -1,6 +1,8 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Outlet } from "react-router";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import Dashboard from "../pages/Dashboard";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -9,10 +11,23 @@ const router = createBrowserRouter([
       return Response.redirect("/login");
     },
   },
+  // auth
   {
-    path: "/login",
-    Component: LoginPage,
+    id: "auth",
+    element: <Outlet />,
+    children: [
+      {
+        path: "/login",
+        Component: LoginPage,
+      },
+      { path: "/register", Component: RegisterPage },
+    ],
   },
-  { path: "/register", Component: RegisterPage },
+  // dashboard routes
+  {
+    id: "private",
+    Component: PrivateRoute,
+    children: [{ path: "/dashboard", Component: Dashboard }],
+  },
 ]);
 export { router };

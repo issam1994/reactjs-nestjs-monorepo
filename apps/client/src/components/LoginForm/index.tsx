@@ -1,34 +1,35 @@
 import React from "react";
 import { Form, Input, Button, Card, Checkbox, message } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useAuthStore } from "../../store";
 
-interface LoginFormValues {
+export interface LoginFormValues {
   email: string;
   password: string;
   rememberMe?: boolean;
 }
 
 const LoginForm: React.FC = () => {
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
   // Handle form submission
   const onFinish = async (values: LoginFormValues) => {
-    // Simulate a login request
     setLoading(true);
     try {
-      // Here you would typically make an API call to log in
       message.info(`Login values: ${values.email}, ${values.password}`);
       // Simulate a successful login
-      setTimeout(() => {
-        setLoading(false);
-        form.resetFields();
-        // Redirect or show success message
-      }, 1000);
-    } catch (error) {
+      await login(values);
+      setLoading(false);
+      form.resetFields();
+      navigate(location.state?.from || "/dashboard");
+    } catch (error: any) {
       setLoading(false);
       // Handle error (e.g., show notification)
-      message.error(`error during login: ${error}`);
+      message.error(`error during login: ${error?.message}`);
     }
   };
 
@@ -49,7 +50,7 @@ const LoginForm: React.FC = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("Please enter a valid email address!")
+                  new Error("Please enter a valid email address!"),
                 );
               },
               message: "Please input your email!",

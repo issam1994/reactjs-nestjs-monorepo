@@ -6,9 +6,10 @@ import {
   LockOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useAuthStore } from "../../store";
 
-interface RegisterFormValues {
+export interface RegisterFormValues {
   firstName: string;
   lastName: string;
   email: string;
@@ -20,12 +21,19 @@ interface RegisterFormValues {
 }
 
 const RegisterForm: React.FC = () => {
+  const { register } = useAuthStore();
+  const navigate = useNavigate();
   const [form] = Form.useForm<RegisterFormValues>();
 
-  const onFinish = (values: RegisterFormValues): void => {
-    console.log("Registered:", values);
-    message.success("Registration successful!");
-    form.resetFields();
+  const onFinish = async (values: RegisterFormValues) => {
+    try {
+      await register(values);
+      message.success("Registration successful!");
+      form.resetFields();
+      navigate("/login");
+    } catch (e: any) {
+      message.error(e?.message);
+    }
   };
 
   return (

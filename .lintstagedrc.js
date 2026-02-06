@@ -1,19 +1,45 @@
+const path = require("path");
+
+const getAffectedWorkspaces = (files) => {
+  const workspaces = new Set();
+
+  files.forEach((file) => {
+    const segments = file.split(path.sep);
+
+    // Extract workspace (e.g., apps/web, packages/ui)
+    if (segments[0] === "apps" || segments[0] === "packages") {
+      workspaces.add(`${segments[0]}/${segments[1]}`);
+    }
+  });
+
+  return Array.from(workspaces);
+};
+
 module.exports = {
-  "*.{js,jsx,ts,tsx}": (filenames) => {
-    const apps = filenames
-      .filter((f) => f.includes("/apps/"))
-      .map((f) => f.split("/apps/")[1].split("/")[0]);
-    const packages = filenames
-      .filter((f) => f.includes("/packages/"))
-      .map((f) => f.split("/packages/")[1].split("/")[0]);
+  "**/*.{js,jsx,ts,tsx}": (filenames) => {
+    const workspaces = getAffectedWorkspaces(filenames);
+    const commands = [];
 
-    const uniqueWorkspaces = [...new Set([...apps, ...packages])];
+    // Run lint in each affected workspace using its own config
+    workspaces.forEach((workspace) => {
+      commands.push(
+        `turbo run lint --filter=./${workspace} --continue`,
+        `turbo run type-check --filter=./${workspace} --continue`,
+      );
+    });
 
-    if (uniqueWorkspaces.length === 0) return [];
+    // Format files with their workspace's config
+    workspaces.forEach((workspace) => {
+      const workspaceFiles = filenames.filter((f) => f.startsWith(workspace));
+      if (workspaceFiles.length > 0) {
+        commands.push(
+          `cd ${workspace} && prettier --write ${workspaceFiles
+            .map((f) => path.relative(workspace, f))
+            .join(" ")}`,
+        );
+      }
+    });
 
-    return [
-      `turbo run lint --filter=...{${filenames.join(",")}}`,
-      "prettier --write " + filenames.join(" "),
-    ];
+    return commands;
   },
 };

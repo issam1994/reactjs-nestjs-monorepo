@@ -20,8 +20,10 @@ export class AuthService {
 
   login(user: User) {
     const payload = { email: user.email, sub: user.id };
+    const userData = this.usersService.findOne(user.id);
     return {
       access_token: this.jwtService.sign(payload),
+      user: userData,
     };
   }
 }
