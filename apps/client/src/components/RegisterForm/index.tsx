@@ -31,8 +31,8 @@ const RegisterForm: React.FC = () => {
       message.success("Registration successful!");
       form.resetFields();
       navigate("/login");
-    } catch (e: any) {
-      message.error(e?.message);
+    } catch (e) {
+      message.error(JSON.stringify(e));
     }
   };
 

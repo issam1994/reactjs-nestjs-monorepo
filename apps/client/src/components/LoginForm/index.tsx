@@ -26,10 +26,10 @@ const LoginForm: React.FC = () => {
       setLoading(false);
       form.resetFields();
       navigate(location.state?.from || "/dashboard");
-    } catch (error: any) {
+    } catch (error) {
       setLoading(false);
       // Handle error (e.g., show notification)
-      message.error(`error during login: ${error?.message}`);
+      message.error(`error during login: ${error}`);
     }
   };
 
