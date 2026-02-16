@@ -11,23 +11,17 @@ export interface LoginFormValues {
 }
 
 const LoginForm: React.FC = () => {
-  const { login } = useAuthStore();
+  const { login, isLoading } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [form] = Form.useForm();
-  const [loading, setLoading] = React.useState(false);
   // Handle form submission
   const onFinish = async (values: LoginFormValues) => {
-    setLoading(true);
     try {
-      message.info(`Login values: ${values.email}, ${values.password}`);
-      // Simulate a successful login
       await login(values);
-      setLoading(false);
       form.resetFields();
       navigate(location.state?.from || "/dashboard");
     } catch (error) {
-      setLoading(false);
       // Handle error (e.g., show notification)
       message.error(`error during login: ${error}`);
     }
@@ -81,7 +75,7 @@ const LoginForm: React.FC = () => {
             htmlType="submit"
             block
             size="large"
-            loading={loading}
+            loading={isLoading}
           >
             Sign In
           </Button>

@@ -3,11 +3,7 @@ import axios from "axios";
 import type { RegisterFormValues } from "../components/RegisterForm";
 import type { LoginFormValues } from "../components/LoginForm";
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+type User = Partial<RegisterFormValues>;
 
 interface AuthStore {
   user: User | null;
@@ -16,6 +12,7 @@ interface AuthStore {
   login: (values: LoginFormValues) => Promise<void>;
   register: (values: RegisterFormValues) => Promise<void>;
   logout: () => void;
+  getProfile: (onDone?: () => void) => void;
   clearError: () => void;
 }
 
@@ -29,25 +26,14 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-const handleAuthResponse = (data: { access_token: string; user: User }) => {
+const handleToken = (data: { access_token: string; user: User }) => {
   localStorage.setItem("access_token", data.access_token);
-  return data.user;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
   isLoading: false,
   error: null,
-  login: async (values: LoginFormValues) => {
-    set({ isLoading: true, error: null });
-    try {
-      const { data } = await axios.post("/auth/login", values);
-      set({ user: handleAuthResponse(data), isLoading: false });
-    } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
-    }
-  },
-
   register: async (values: RegisterFormValues) => {
     set({ isLoading: true, error: null });
     try {
@@ -56,7 +42,28 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ error: (error as Error).message, isLoading: false });
     }
   },
-
+  login: async (values: LoginFormValues) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data: authData } = await axios.post("/auth/login", values);
+      handleToken(authData);
+      // get profile
+      get().getProfile();
+    } catch (error) {
+      set({ error: (error as Error).message, isLoading: false });
+    }
+  },
+  getProfile: async (onDone) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data } = await axios.get("/auth/profile");
+      set({ user: data, isLoading: false });
+    } catch (error) {
+      set({ error: (error as Error).message, isLoading: false });
+    } finally {
+      if (onDone) onDone();
+    }
+  },
   logout: () => {
     localStorage.removeItem("access_token");
     set({ user: null, error: null });

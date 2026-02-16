@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Body,
   Controller,
@@ -29,16 +31,19 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return this.authService.login(req.user);
   }
 
   @Post('logout')
   logout(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return req.logout();
   }
 
   @Get('profile')
   getProfile(@Request() req: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const userId: number = req.user.id;
     return this.usersService.findOne(userId);
   }

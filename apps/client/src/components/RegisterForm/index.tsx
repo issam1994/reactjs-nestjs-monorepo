@@ -21,7 +21,7 @@ export interface RegisterFormValues {
 }
 
 const RegisterForm: React.FC = () => {
-  const { register } = useAuthStore();
+  const { register, isLoading } = useAuthStore();
   const navigate = useNavigate();
   const [form] = Form.useForm<RegisterFormValues>();
 
@@ -135,7 +135,7 @@ const RegisterForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
             Register
           </Button>
           <Link to="/login" className="mt-2 block text-center">

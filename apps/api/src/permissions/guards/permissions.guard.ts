@@ -19,7 +19,9 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const request = context.switchToHttp().getRequest();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const userId = request.user?.id;
 
     if (!userId) {
@@ -27,6 +29,7 @@ export class PermissionsGuard implements CanActivate {
     }
 
     const userPermissions =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await this.permissionsService.getUserPermissions(userId);
 
     return requiredPermissions.every((permission) =>
