@@ -14,7 +14,7 @@ export interface RegisterFormValues {
   lastName: string;
   email: string;
   age: number;
-  phone: string;
+  mobileNumber: string;
   gender: string;
   password: string;
   confirmPassword: string;
@@ -83,7 +83,7 @@ const RegisterForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="phone"
+          name="mobileNumber"
           label="Phone Number"
           rules={[
             { required: true, message: "Please input your phone number!" },

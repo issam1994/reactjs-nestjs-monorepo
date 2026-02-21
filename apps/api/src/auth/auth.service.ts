@@ -22,7 +22,13 @@ export class AuthService {
     const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
-      user,
     };
+  }
+
+  getProfile(id: number) {
+    return this.usersService.findOne({
+      where: { id },
+      relations: { roles: { permissions: true } },
+    });
   }
 }

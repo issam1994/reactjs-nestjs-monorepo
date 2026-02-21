@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "./store";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   const { getProfile } = useAuthStore();
@@ -17,9 +20,9 @@ function App() {
     );
   }
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </>
+    </QueryClientProvider>
   );
 }
 

@@ -38,6 +38,7 @@ export default class UsersFactory {
       roles: userRole ? [userRole] : [],
     }));
     // make the first user an admin
+    users[0].id = 1;
     users[0].email = this.configService.getOrThrow<string>('adminMail');
     users[0].password = hashPassword(
       this.configService.getOrThrow<string>('adminPassword'),

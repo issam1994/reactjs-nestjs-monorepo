@@ -1,18 +1,7 @@
-import { Layout } from "antd";
 import LoginForm from "../../components/LoginForm";
 
 const LoginPage: React.FC = () => {
-  return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <LoginForm />
-    </Layout>
-  );
+  return <LoginForm />;
 };
 
 export default LoginPage;

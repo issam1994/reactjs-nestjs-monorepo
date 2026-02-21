@@ -1,12 +1,18 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { PermissionsGuard } from './permissions/guards/permissions.guard';
+import { PermissionsService } from './permissions/permissions.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Apply JWT guard globally
   const reflector = app.get(Reflector);
-  app.useGlobalGuards(new JwtAuthGuard(reflector));
+  const permissionsService = app.get(PermissionsService);
+  app.useGlobalGuards(
+    new JwtAuthGuard(reflector),
+    new PermissionsGuard(reflector, permissionsService),
+  );
   // enable cors
   app.enableCors();
   //

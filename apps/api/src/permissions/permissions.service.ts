@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class PermissionsService {
   constructor(
-    private UsersService: UsersService,
+    private usersService: UsersService,
     @InjectRepository(Permission)
     private readonly permissionsRepository: Repository<Permission>,
   ) {}
@@ -33,8 +33,11 @@ export class PermissionsService {
     return this.permissionsRepository.delete(id);
   }
 
-  async getUserPermissions(userId: number) {
-    const user = await this.UsersService.findOne(userId);
+  async getUserPermissions(id: number) {
+    const user = await this.usersService.findOne({
+      where: { id },
+      relations: { roles: { permissions: true } },
+    });
     const permissions = new Set<string>();
     user?.roles.forEach((role) =>
       role.permissions.forEach((permission) =>

@@ -20,13 +20,15 @@ export default class RolesFactory {
     // map of roles to be created
     const RolesToCreate = [
       {
+        id: 1,
         name: 'user',
         actions: [ActionEnum.READ],
       },
       {
+        id: 2,
         name: 'admin',
         // will get all permissions
-        permissions: Object.values(ActionEnum),
+        actions: Object.values(ActionEnum),
       },
     ];
     const roles: Partial<Role>[] = [];
@@ -35,8 +37,9 @@ export default class RolesFactory {
       select: ['action', 'id'],
     });
     // create roles and link them to permissions
-    RolesToCreate.forEach(({ name, actions }) => {
+    RolesToCreate.forEach(({ name, id, actions }) => {
       roles.push({
+        id,
         name,
         permissions: permissions.filter((permission) =>
           // keep the permission if it contains the action allowed for the role

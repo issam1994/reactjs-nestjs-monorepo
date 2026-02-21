@@ -44,7 +44,7 @@ export class AuthController {
   @Get('profile')
   getProfile(@Request() req: any) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const userId: number = req.user.id;
-    return this.usersService.findOne(userId);
+    const id: number = req.user.id;
+    return this.authService.getProfile(id);
   }
 }

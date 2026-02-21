@@ -6,39 +6,36 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { PermissionsGuard } from './guards/permissions.guard';
 import { RequirePermissions } from './decorators/requiredPermissions.decorator';
 
 @Controller('permissions')
-@UseGuards(PermissionsGuard)
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @Post()
-  @RequirePermissions('permissions:create')
+  @RequirePermissions('permission:create')
   create(@Body() createPermissionDto: CreatePermissionDto) {
     return this.permissionsService.create(createPermissionDto);
   }
 
   @Get()
-  @RequirePermissions('permissions:read')
+  @RequirePermissions('permission:read')
   findAll() {
     return this.permissionsService.findAll();
   }
 
   @Get(':id')
-  @RequirePermissions('permissions:read')
+  @RequirePermissions('permission:read')
   findOne(@Param('id') id: string) {
     return this.permissionsService.findOne(+id);
   }
 
   @Patch(':id')
-  @RequirePermissions('permissions:update')
+  @RequirePermissions('permission:update')
   update(
     @Param('id') id: string,
     @Body() updatePermissionDto: UpdatePermissionDto,
@@ -47,7 +44,7 @@ export class PermissionsController {
   }
 
   @Delete(':id')
-  @RequirePermissions('permissions:delete')
+  @RequirePermissions('permission:delete')
   remove(@Param('id') id: string) {
     return this.permissionsService.remove(+id);
   }

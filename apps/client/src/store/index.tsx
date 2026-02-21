@@ -38,6 +38,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await axios.post("/auth/register", values);
+      set({ isLoading: false, error: null });
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });
     }

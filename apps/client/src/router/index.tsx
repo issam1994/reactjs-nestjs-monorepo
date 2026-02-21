@@ -4,6 +4,9 @@ import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import UsersPage from "../pages/Users";
+import AppLayout from "../Layout/AppLayout";
+import AuthLayout from "../Layout/AuthLayout";
 
 const router = createBrowserRouter([
   {
@@ -12,23 +15,34 @@ const router = createBrowserRouter([
       return Response.redirect("/login");
     },
   },
-  // auth
+  // auth routes
   {
-    id: "auth",
     Component: PublicRoute,
     children: [
       {
-        path: "/login",
-        Component: LoginPage,
+        Component: AuthLayout,
+        children: [
+          {
+            path: "/login",
+            Component: LoginPage,
+          },
+          { path: "/register", Component: RegisterPage },
+        ],
       },
-      { path: "/register", Component: RegisterPage },
     ],
   },
-  // dashboard routes
+  // app routes
   {
-    id: "private",
     Component: PrivateRoute,
-    children: [{ path: "/dashboard", Component: Dashboard }],
+    children: [
+      {
+        Component: AppLayout,
+        children: [
+          { path: "/dashboard", Component: Dashboard },
+          { path: "/users", Component: UsersPage },
+        ],
+      },
+    ],
   },
 ]);
 export { router };
