@@ -39,7 +39,7 @@ const AppLayout: React.FC = () => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="bg-white! px-4! shadow-md!">
+        <Header className="px-4! shadow-md!">
           <div className="flex! justify-between! items-center!">
             <h2>Welcome Back, {user?.firstName}</h2>
             <Avatar icon={<UserOutlined />} />

@@ -13,7 +13,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getProfile(() => setLoading(false));
-  }, []);
+  }, [getProfile]);
   if (loading) {
     return (
       <Spin fullscreen indicator={<LoadingOutlined spin />} size="large" />
