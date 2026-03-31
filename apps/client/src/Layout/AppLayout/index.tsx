@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Layout, Menu, Avatar } from "antd";
 import {
   UserOutlined,
-  LogoutOutlined,
   DashboardOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
@@ -24,7 +23,7 @@ const AppLayout: React.FC = () => {
       >
         <div className="text-white px-4 py-4 text-lg font-bold">
           <DashboardOutlined className="ml-4 mr-2" />
-          {collapsed ? null : "Ultima"}
+          {collapsed ? null : "XXXXXX"}
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item key="1" icon={<SettingOutlined />}>
@@ -32,9 +31,6 @@ const AppLayout: React.FC = () => {
           </Menu.Item>
           <Menu.Item key="2" icon={<UserOutlined />}>
             <NavLink to={"/users"}>Users</NavLink>
-          </Menu.Item>
-          <Menu.Item onClick={logout} key="4" icon={<LogoutOutlined />}>
-            Logout
           </Menu.Item>
         </Menu>
       </Sider>

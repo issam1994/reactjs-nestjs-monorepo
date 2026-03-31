@@ -1,4 +1,13 @@
-import { Table, Spin, Alert, Button, Space, message } from "antd";
+import {
+  Table,
+  Spin,
+  Alert,
+  Space,
+  message,
+  Typography,
+  Card,
+  Tag,
+} from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
@@ -41,19 +50,25 @@ const UsersPage: React.FC = () => {
   const columns: ColumnsType<User> = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      key: "id",
+      render: (user) => `${user.firstName} ${user.lastName}`,
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      render: (email) => <Tag color={"green"}>{email}</Tag>,
     },
     {
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
+      render: (date) => new Date(date).toLocaleDateString(),
+    },
+    {
+      title: "Updated At",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       render: (date) => new Date(date).toLocaleDateString(),
     },
   ];
@@ -65,19 +80,18 @@ const UsersPage: React.FC = () => {
   return (
     <div style={{ padding: "24px" }}>
       <Space orientation="vertical" style={{ width: "100%" }} size="large">
-        <h1>Users</h1>
-        <Button onClick={() => refetch()} loading={isLoading}>
-          Refresh
-        </Button>
-        <Spin spinning={isLoading}>
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="id"
-            pagination={pagination}
-            onChange={(pag) => setPagination(pag)}
-          />
-        </Spin>
+        <Typography.Title level={2}>Users</Typography.Title>
+        <Card size="small">
+          <Spin spinning={isLoading}>
+            <Table
+              columns={columns}
+              dataSource={data}
+              rowKey="id"
+              pagination={pagination}
+              onChange={(pag) => setPagination(pag)}
+            />
+          </Spin>
+        </Card>
       </Space>
     </div>
   );
