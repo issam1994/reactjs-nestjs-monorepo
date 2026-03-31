@@ -11,7 +11,7 @@ import { NavLink, Outlet } from "react-router";
 const { Header, Sider, Content, Footer } = Layout;
 
 const AppLayout: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const [collapsed, setCollapsed] = useState(false);
 
   return (

@@ -39,7 +39,6 @@ const UsersPage: React.FC = () => {
     data = [],
     isLoading,
     error,
-    refetch,
   } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
@@ -49,7 +48,7 @@ const UsersPage: React.FC = () => {
 
   const columns: ColumnsType<User> = [
     {
-      title: "Name",
+      title: "Full Name",
       key: "id",
       render: (user) => `${user.firstName} ${user.lastName}`,
     },
