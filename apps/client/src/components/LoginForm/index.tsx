@@ -3,6 +3,7 @@ import { Form, Input, Button, Card, Checkbox, message } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../store";
+import { requestMessageFormatter } from "../../utils/RequestMessageFormatter";
 
 export interface LoginFormValues {
   email: string;
@@ -21,9 +22,10 @@ const LoginForm: React.FC = () => {
       await login(values);
       form.resetFields();
       navigate(location.state?.from || "/dashboard");
-    } catch (error) {
-      // Handle error (e.g., show notification)
-      message.error(`error during login: ${error}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // Handle error
+      message.error(requestMessageFormatter(error));
     }
   };
 

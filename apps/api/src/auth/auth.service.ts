@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -15,7 +15,7 @@ export class AuthService {
     if (user && bcrypt.compareSync(password, user.password)) {
       return user;
     }
-    return null;
+    throw new NotFoundException('invalid email or password');
   }
 
   login(user: User) {

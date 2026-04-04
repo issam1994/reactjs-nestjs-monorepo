@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router";
 import { useAuthStore } from "../../store";
+import { requestMessageFormatter } from "../../utils/RequestMessageFormatter";
 
 export interface RegisterFormValues {
   firstName: string;
@@ -17,7 +18,7 @@ export interface RegisterFormValues {
   mobileNumber: string;
   gender: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
 }
 
 const RegisterForm: React.FC = () => {
@@ -27,12 +28,14 @@ const RegisterForm: React.FC = () => {
 
   const onFinish = async (values: RegisterFormValues) => {
     try {
+      delete values?.confirmPassword;
       await register(values);
       message.success("Registration successful!");
       form.resetFields();
       navigate("/login");
-    } catch (e) {
-      message.error(JSON.stringify(e));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      message.error(requestMessageFormatter(error));
     }
   };
 
@@ -72,14 +75,6 @@ const RegisterForm: React.FC = () => {
           ]}
         >
           <Input prefix={<MailOutlined />} placeholder="Email" />
-        </Form.Item>
-
-        <Form.Item
-          name="age"
-          label="Age"
-          rules={[{ required: true, message: "Please input your age!" }]}
-        >
-          <Input type="number" placeholder="Age" />
         </Form.Item>
 
         <Form.Item

@@ -8,12 +8,10 @@ type User = Partial<RegisterFormValues>;
 interface AuthStore {
   user: User | null;
   isLoading: boolean;
-  error: string | null;
   login: (values: LoginFormValues) => Promise<void>;
   register: (values: RegisterFormValues) => Promise<void>;
   logout: () => void;
   getProfile: (onDone?: () => void) => void;
-  clearError: () => void;
 }
 
 axios.defaults.baseURL = "http://localhost:3000";
@@ -33,44 +31,38 @@ const handleToken = (data: { access_token: string; user: User }) => {
 export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
   isLoading: false,
-  error: null,
   register: async (values: RegisterFormValues) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true });
     try {
       await axios.post("/auth/register", values);
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ isLoading: false });
+    } finally {
+      set({ isLoading: false });
     }
   },
   login: async (values: LoginFormValues) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true });
     try {
       const { data: authData } = await axios.post("/auth/login", values);
       handleToken(authData);
       // get profile
       get().getProfile();
-    } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+    } finally {
+      set({ isLoading: false });
     }
   },
   getProfile: async (onDone) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true });
     try {
       const { data } = await axios.get("/auth/profile");
       set({ user: data, isLoading: false });
-    } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
     } finally {
+      set({ isLoading: false });
       if (onDone) onDone();
     }
   },
   logout: () => {
     localStorage.removeItem("access_token");
-    set({ user: null, error: null });
-  },
-
-  clearError: () => {
-    set({ error: null });
+    set({ user: null });
   },
 }));
