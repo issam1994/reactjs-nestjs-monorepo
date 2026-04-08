@@ -8,15 +8,13 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router";
 import { useAuthStore } from "../../store";
-import { requestMessageFormatter } from "../../utils/RequestMessageFormatter";
+import type { User } from "../../types/User";
+import { requestMessageFormatter } from "../../utils/reqMessageFormatter";
 
-export interface RegisterFormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  age: number;
-  mobileNumber: string;
-  gender: string;
+export interface RegisterFormValues extends Omit<
+  User,
+  "id" | "createdAt" | "updatedAt"
+> {
   password: string;
   confirmPassword?: string;
 }

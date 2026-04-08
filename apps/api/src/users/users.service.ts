@@ -2,10 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, ILike, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { RolesService } from 'src/roles/roles.service';
+import { getUsersDto } from './dto/get-users.dto';
 
 @Injectable()
 export class UsersService {
@@ -35,8 +36,33 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.userRepository.find();
+  async findAll(query: getUsersDto) {
+    const { page, take, search } = query;
+    const [data, count] = await this.userRepository.findAndCount({
+      where: [
+        {
+          email: ILike(`%${search}%`),
+        },
+        {
+          firstName: ILike(`%${search}%`),
+        },
+        {
+          lastName: ILike(`%${search}%`),
+        },
+      ],
+      skip: (page - 1) * take,
+      take,
+      order: { createdAt: 'DESC' },
+    });
+    return {
+      data,
+      meta: {
+        search,
+        page,
+        take,
+        count,
+      },
+    };
   }
 
   findOneById(id: number) {

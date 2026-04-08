@@ -10,7 +10,7 @@ import {
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { RequirePermissions } from './decorators/requiredPermissions.decorator';
+import { RequirePermissions } from './decorators/required-permissions.decorator';
 
 @Controller('permissions')
 export class PermissionsController {

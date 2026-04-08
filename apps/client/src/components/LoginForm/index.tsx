@@ -3,7 +3,7 @@ import { Form, Input, Button, Card, Checkbox, message } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../store";
-import { requestMessageFormatter } from "../../utils/RequestMessageFormatter";
+import { requestMessageFormatter } from "../../utils/reqMessageFormatter";
 
 export interface LoginFormValues {
   email: string;

@@ -1,51 +1,16 @@
-import {
-  Table,
-  Spin,
-  Alert,
-  Space,
-  message,
-  Typography,
-  Card,
-  Tag,
-} from "antd";
-import { useQuery } from "@tanstack/react-query";
+import { Table, Spin, Alert, Space, Typography, Card, Tag, Input } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import type { User } from "../../types/User";
+import { useGetUsers } from "../../api/users/useGetUsers";
 import { useState } from "react";
-import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
-import axios from "axios";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-}
-
-const fetchUsers = async (): Promise<User[] | undefined> => {
-  try {
-    const { data } = await axios.get("/users");
-    return data;
-  } catch (error) {
-    if (error) message.error("Failed to fetch users");
-  }
-};
 
 const UsersPage: React.FC = () => {
-  const [pagination, setPagination] = useState<TablePaginationConfig>({
-    current: 1,
-    pageSize: 10,
+  const [filters, setFilters] = useState({
+    page: 1,
+    take: 5,
+    search: "",
   });
-
-  const {
-    data = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: fetchUsers,
-    staleTime: 5 * 60 * 1000,
-    retry: 2,
-  });
-
+  const { data, isLoading, error } = useGetUsers(filters);
   const columns: ColumnsType<User> = [
     {
       title: "Full Name",
@@ -81,13 +46,37 @@ const UsersPage: React.FC = () => {
       <Space orientation="vertical" style={{ width: "100%" }} size="large">
         <Typography.Title level={2}>Users</Typography.Title>
         <Card size="small">
+          <Input
+            className="max-w-xs"
+            placeholder="Search by name or email"
+            value={filters.search}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFilters({
+                ...filters,
+                search: e.target.value,
+                page: 1,
+              })
+            }
+            style={{ marginBottom: "16px" }}
+          />
           <Spin spinning={isLoading}>
             <Table
               columns={columns}
-              dataSource={data}
+              dataSource={data?.data}
               rowKey="id"
-              pagination={pagination}
-              onChange={(pag) => setPagination(pag)}
+              pagination={{
+                current: data?.meta?.page,
+                pageSize: data?.meta?.take,
+                showSizeChanger: true,
+                pageSizeOptions: ["5", "10", "20", "50"],
+              }}
+              onChange={(pag) =>
+                setFilters({
+                  ...filters,
+                  page: pag.current || 1,
+                  take: pag.pageSize || 5,
+                })
+              }
             />
           </Spin>
         </Card>

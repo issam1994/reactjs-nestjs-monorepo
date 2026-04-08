@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { RequirePermissions } from 'src/permissions/decorators/requiredPermissions.decorator';
+import { RequirePermissions } from 'src/permissions/decorators/required-permissions.decorator';
+import { getUsersDto } from './dto/get-users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -24,8 +26,8 @@ export class UsersController {
 
   @Get()
   @RequirePermissions('user:read')
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: getUsersDto) {
+    return this.usersService.findAll(query);
   }
 
   @Get(':id')

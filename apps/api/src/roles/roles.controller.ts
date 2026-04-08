@@ -10,7 +10,7 @@ import {
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { RequirePermissions } from 'src/permissions/decorators/requiredPermissions.decorator';
+import { RequirePermissions } from 'src/permissions/decorators/required-permissions.decorator';
 
 @Controller('roles')
 export class RolesController {
