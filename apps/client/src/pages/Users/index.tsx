@@ -1,16 +1,32 @@
-import { Table, Spin, Alert, Space, Typography, Card, Tag, Input } from "antd";
+import {
+  Table,
+  Spin,
+  Alert,
+  Space,
+  Typography,
+  Card,
+  Tag,
+  Input,
+  Form,
+  Button,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { User } from "../../types/User";
 import { useGetUsers } from "../../api/users/useGetUsers";
-import { useState } from "react";
 
 const UsersPage: React.FC = () => {
-  const [filters, setFilters] = useState({
+  const { data, isLoading, error, filters, setFilters } = useGetUsers({
     page: 1,
     take: 5,
     search: "",
   });
-  const { data, isLoading, error } = useGetUsers(filters);
+
+  const [form] = Form.useForm();
+
+  const handleFilterFormSubmit = (values: { search: string }) => {
+    setFilters((filters) => ({ ...filters, search: values.search, page: 1 }));
+  };
+
   const columns: ColumnsType<User> = [
     {
       title: "Full Name",
@@ -46,19 +62,23 @@ const UsersPage: React.FC = () => {
       <Space orientation="vertical" style={{ width: "100%" }} size="large">
         <Typography.Title level={2}>Users</Typography.Title>
         <Card size="small">
-          <Input
-            className="max-w-xs"
-            placeholder="Search by name or email"
-            value={filters.search}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFilters({
-                ...filters,
-                search: e.target.value,
-                page: 1,
-              })
-            }
-            style={{ marginBottom: "16px" }}
-          />
+          <Form
+            initialValues={filters}
+            form={form}
+            layout="inline"
+            className="mb-4!"
+            onFinish={handleFilterFormSubmit}
+          >
+            <Form.Item name={"search"} label="Search">
+              <Input
+                placeholder="Search by name or email"
+                style={{ width: 300 }}
+              />
+            </Form.Item>
+            <Button type="primary" htmlType="submit">
+              Apply
+            </Button>
+          </Form>
           <Spin spinning={isLoading}>
             <Table
               columns={columns}
@@ -69,6 +89,13 @@ const UsersPage: React.FC = () => {
                 pageSize: data?.meta?.take,
                 showSizeChanger: true,
                 pageSizeOptions: ["5", "10", "20", "50"],
+                total: data?.meta?.total,
+                onChange: (page, take) =>
+                  setFilters({
+                    ...filters,
+                    page: page,
+                    take: take,
+                  }),
               }}
               onChange={(pag) =>
                 setFilters({

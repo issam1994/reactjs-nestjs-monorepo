@@ -36,9 +36,12 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async findAll(query: getUsersDto) {
+  async findAll(query: getUsersDto): Promise<{
+    data: User[];
+    meta: getUsersDto & { total: number; count: number };
+  }> {
     const { page, take, search } = query;
-    const [data, count] = await this.userRepository.findAndCount({
+    const [data, total] = await this.userRepository.findAndCount({
       where: [
         {
           email: ILike(`%${search}%`),
@@ -60,7 +63,8 @@ export class UsersService {
         search,
         page,
         take,
-        count,
+        total,
+        count: data.length,
       },
     };
   }

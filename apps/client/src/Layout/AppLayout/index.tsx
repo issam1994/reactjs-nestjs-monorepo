@@ -25,11 +25,11 @@ const AppLayout: React.FC = () => {
           <DashboardOutlined className="ml-4 mr-2" />
           {collapsed ? null : "XXXXXX"}
         </div>
-        <Menu defaultSelectedKeys={["1"]}>
-          <Menu.Item key="1" icon={<BarChartOutlined />}>
+        <Menu theme="dark" defaultSelectedKeys={[location.pathname]}>
+          <Menu.Item key="/dashboard" icon={<BarChartOutlined />}>
             <NavLink to={"/dashboard"}>Dashboard</NavLink>
           </Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />}>
+          <Menu.Item key="/users" icon={<UserOutlined />}>
             <NavLink to={"/users"}>Users</NavLink>
           </Menu.Item>
         </Menu>

@@ -3,6 +3,7 @@ import { message } from "antd";
 import axios from "axios";
 import type { Pagination } from "../../types/Pagination";
 import type { User } from "../../types/User";
+import { useState } from "react";
 
 // types.ts
 export interface UsersFilters extends Pagination {
@@ -11,7 +12,10 @@ export interface UsersFilters extends Pagination {
 
 interface UsersResponse {
   data: User[];
-  meta: UsersFilters;
+  meta: UsersFilters & {
+    total: number;
+    count: number;
+  };
 }
 
 const fetchUsers = async (filters: UsersFilters): Promise<UsersResponse> => {
@@ -24,7 +28,9 @@ const fetchUsers = async (filters: UsersFilters): Promise<UsersResponse> => {
   }
 };
 
-export const useGetUsers = (filters: UsersFilters) => {
+export const useGetUsers = (initialFilters: UsersFilters) => {
+  const [filters, setFilters] = useState(initialFilters);
+
   const query = useQuery<UsersResponse>({
     queryKey: ["users", ...Object.values(filters)],
     queryFn: () => fetchUsers(filters),
@@ -32,5 +38,5 @@ export const useGetUsers = (filters: UsersFilters) => {
     retry: 2,
   });
 
-  return query;
+  return { ...query, setFilters, filters };
 };
