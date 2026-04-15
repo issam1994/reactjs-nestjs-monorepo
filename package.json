@@ -5,6 +5,10 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "dev:api": "yarn workspace api dev",
+    "dev:client": "yarn workspace client dev",
+    "build:api": "yarn workspace api build",
+    "build:client": "yarn workspace client build",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "prepare": "husky"
