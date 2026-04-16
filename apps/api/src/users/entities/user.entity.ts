@@ -25,6 +25,8 @@ export class User {
   gender: 'male' | 'female' | 'other';
   @Column()
   mobileNumber: string;
+  @Column({ default: false })
+  disabled: boolean;
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
   roles: Role[];
