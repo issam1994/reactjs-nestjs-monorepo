@@ -62,7 +62,7 @@ const AppLayout: React.FC = () => {
             </Dropdown>
           </div>
         </Header>
-        <Content className="m-4">
+        <Content className="m-4 p-4">
           <Outlet />
         </Content>
         <Footer className="text-center">Dashboard ©2024</Footer>
