@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { RequirePermissions } from './decorators/required-permissions.decorator';
+import { GetPermissionsDto } from './dto/get-permissions.dto';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -24,8 +26,8 @@ export class PermissionsController {
 
   @Get()
   @RequirePermissions('permission:read')
-  findAll() {
-    return this.permissionsService.findAll();
+  findAll(@Query() query: GetPermissionsDto) {
+    return this.permissionsService.findAll(query);
   }
 
   @Get(':id')

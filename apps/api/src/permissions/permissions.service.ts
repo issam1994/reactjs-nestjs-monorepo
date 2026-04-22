@@ -5,6 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './entities/permission.entity';
 import { Repository } from 'typeorm';
+import { GetPermissionsDto } from './dto/get-permissions.dto';
 
 @Injectable()
 export class PermissionsService {
@@ -17,8 +18,30 @@ export class PermissionsService {
     return this.permissionsRepository.create(createPermissionDto);
   }
 
-  findAll() {
-    return this.permissionsRepository.find();
+  async findAll(query: GetPermissionsDto): Promise<{
+    data: Permission[];
+    meta: GetPermissionsDto & { total: number; count: number };
+  }> {
+    const { page, take, search } = query;
+
+    const [data, total] = await this.permissionsRepository.findAndCount({
+      where: {
+        resource: search ? search : undefined,
+      },
+      skip: (page - 1) * take,
+      take,
+      order: { createdAt: 'DESC' },
+    });
+    return {
+      data,
+      meta: {
+        search,
+        page,
+        take,
+        total,
+        count: data.length,
+      },
+    };
   }
 
   findOne(id: number) {

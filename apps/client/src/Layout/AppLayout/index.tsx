@@ -4,11 +4,18 @@ import {
   UserOutlined,
   DashboardOutlined,
   BarChartOutlined,
+  KeyOutlined,
 } from "@ant-design/icons";
 import { useAuthStore } from "../../store";
 import { NavLink, Outlet } from "react-router";
 
 const { Header, Sider, Content, Footer } = Layout;
+
+const menuItems = [
+  { key: "/dashboard", icon: <BarChartOutlined />, label: "Dashboard" },
+  { key: "/users", icon: <UserOutlined />, label: "Users" },
+  { key: "/permissions", icon: <KeyOutlined />, label: "Permissions" },
+];
 
 const AppLayout: React.FC = () => {
   const { user, logout } = useAuthStore();
@@ -26,12 +33,11 @@ const AppLayout: React.FC = () => {
           {collapsed ? null : "XXXXXX"}
         </div>
         <Menu theme="dark" defaultSelectedKeys={[location.pathname]}>
-          <Menu.Item key="/dashboard" icon={<BarChartOutlined />}>
-            <NavLink to={"/dashboard"}>Dashboard</NavLink>
-          </Menu.Item>
-          <Menu.Item key="/users" icon={<UserOutlined />}>
-            <NavLink to={"/users"}>Users</NavLink>
-          </Menu.Item>
+          {menuItems.map((item) => (
+            <Menu.Item key={item.key} icon={item.icon}>
+              <NavLink to={item.key}>{item.label}</NavLink>
+            </Menu.Item>
+          ))}
         </Menu>
       </Sider>
       <Layout>

@@ -1,9 +1,8 @@
 import React from "react";
-import { Form, Input, Button, Card, Checkbox, message } from "antd";
+import { Form, Input, Button, Card, Checkbox } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../../store";
-import { requestMessageFormatter } from "../../utils/reqMessageFormatter";
 
 export interface LoginFormValues {
   email: string;
@@ -12,20 +11,16 @@ export interface LoginFormValues {
 }
 
 const LoginForm: React.FC = () => {
-  const { login, isLoading } = useAuthStore();
+  const { login, isLoading, user } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [form] = Form.useForm();
   // Handle form submission
   const onFinish = async (values: LoginFormValues) => {
-    try {
-      await login(values);
+    await login(values);
+    if (user?.id) {
       form.resetFields();
       navigate(location.state?.from || "/dashboard");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      // Handle error
-      message.error(requestMessageFormatter(error));
     }
   };
 

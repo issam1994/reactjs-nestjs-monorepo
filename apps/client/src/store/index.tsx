@@ -2,8 +2,9 @@ import { create } from "zustand";
 import axios from "axios";
 import type { RegisterFormValues } from "../components/RegisterForm";
 import type { LoginFormValues } from "../components/LoginForm";
-
-type User = Partial<RegisterFormValues>;
+import type { User } from "../types/User";
+import { message } from "antd";
+import { requestMessageFormatter } from "../utils/reqMessageFormatter";
 
 interface AuthStore {
   user: User | null;
@@ -36,6 +37,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       await axios.post("/auth/register", values);
       set({ isLoading: false });
+    } catch (error) {
+      message.error(requestMessageFormatter(error));
     } finally {
       set({ isLoading: false });
     }
@@ -46,7 +49,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const { data: authData } = await axios.post("/auth/login", values);
       handleToken(authData);
       // get profile
-      get().getProfile();
+      await get().getProfile();
+    } catch (error) {
+      message.error(requestMessageFormatter(error));
     } finally {
       set({ isLoading: false });
     }
@@ -56,6 +61,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       const { data } = await axios.get("/auth/profile");
       set({ user: data, isLoading: false });
+    } catch (error) {
+      message.error(requestMessageFormatter(error));
     } finally {
       set({ isLoading: false });
       if (onDone) onDone();

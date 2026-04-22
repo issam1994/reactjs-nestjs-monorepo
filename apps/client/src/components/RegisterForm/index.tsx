@@ -9,7 +9,6 @@ import {
 import { Link, useNavigate } from "react-router";
 import { useAuthStore } from "../../store";
 import type { User } from "../../types/User";
-import { requestMessageFormatter } from "../../utils/reqMessageFormatter";
 
 export interface RegisterFormValues extends Omit<
   User,
@@ -25,16 +24,11 @@ const RegisterForm: React.FC = () => {
   const [form] = Form.useForm<RegisterFormValues>();
 
   const onFinish = async (values: RegisterFormValues) => {
-    try {
-      delete values?.confirmPassword;
-      await register(values);
-      message.success("Registration successful!");
-      form.resetFields();
-      navigate("/login");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      message.error(requestMessageFormatter(error));
-    }
+    delete values?.confirmPassword;
+    await register(values);
+    message.success("Registration successful!");
+    form.resetFields();
+    navigate("/login");
   };
 
   return (
