@@ -41,7 +41,7 @@ const AppLayout: React.FC = () => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="px-4! shadow-md!">
+        <Header className="px-4! !text-white shadow-md!">
           <div className="flex! justify-between! items-center!">
             <h2>Welcome Back, {user?.firstName}</h2>
             <Dropdown
