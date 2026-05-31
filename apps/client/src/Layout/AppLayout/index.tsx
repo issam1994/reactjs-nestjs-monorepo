@@ -5,6 +5,7 @@ import {
   DashboardOutlined,
   BarChartOutlined,
   KeyOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { useAuthStore } from "../../store";
 import { NavLink, Outlet } from "react-router";
@@ -13,7 +14,8 @@ const { Header, Sider, Content, Footer } = Layout;
 
 const menuItems = [
   { key: "/dashboard", icon: <BarChartOutlined />, label: "Dashboard" },
-  { key: "/users", icon: <UserOutlined />, label: "Users" },
+  { key: "/users", icon: <UsergroupAddOutlined />, label: "Users" },
+  { key: "/roles", icon: <UserOutlined />, label: "Roles" },
   { key: "/permissions", icon: <KeyOutlined />, label: "Permissions" },
 ];
 
@@ -41,7 +43,7 @@ const AppLayout: React.FC = () => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="px-4! !text-white shadow-md!">
+        <Header className="px-4! text-white! shadow-md!">
           <div className="flex! justify-between! items-center!">
             <h2>Welcome Back, {user?.firstName}</h2>
             <Dropdown

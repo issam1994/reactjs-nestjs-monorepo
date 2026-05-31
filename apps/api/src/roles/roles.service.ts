@@ -4,6 +4,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
+import { GetRolesDto } from './dto/get-roles.dto';
 
 @Injectable()
 export class RolesService {
@@ -14,7 +15,30 @@ export class RolesService {
     return this.rolesRepository.create(createRoleDto);
   }
 
-  findAll() {
+  async findAll(query: GetRolesDto): Promise<{
+    data: Role[];
+    meta: GetRolesDto & { total: number; count: number };
+  }> {
+    const { page, take, search } = query;
+
+    const [data, total] = await this.rolesRepository.findAndCount({
+      skip: (page - 1) * take,
+      take,
+      order: { createdAt: 'DESC' },
+    });
+    return {
+      data,
+      meta: {
+        search,
+        page,
+        take,
+        total,
+        count: data.length,
+      },
+    };
+  }
+
+  findAllWithoutPagination() {
     return this.rolesRepository.find();
   }
 

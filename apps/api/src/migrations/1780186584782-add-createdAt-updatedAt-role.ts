@@ -1,0 +1,19 @@
+import { MigrationInterface, QueryRunner } from 'typeorm';
+
+export class AddCreatedAtUpdatedAtRole1780186584782 implements MigrationInterface {
+  name = 'AddCreatedAtUpdatedAtRole1780186584782';
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `ALTER TABLE "role" ADD "createdAt" TIMESTAMP NOT NULL DEFAULT now()`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "role" ADD "updatedAt" TIMESTAMP NOT NULL DEFAULT now()`,
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "role" DROP COLUMN "updatedAt"`);
+    await queryRunner.query(`ALTER TABLE "role" DROP COLUMN "createdAt"`);
+  }
+}

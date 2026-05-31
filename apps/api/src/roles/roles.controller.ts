@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RequirePermissions } from 'src/permissions/decorators/required-permissions.decorator';
+import { GetRolesDto } from './dto/get-roles.dto';
 
 @Controller('roles')
 export class RolesController {
@@ -24,8 +26,8 @@ export class RolesController {
 
   @Get()
   @RequirePermissions('role:read')
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(@Query() query: GetRolesDto) {
+    return this.rolesService.findAll(query);
   }
 
   @Get(':id')

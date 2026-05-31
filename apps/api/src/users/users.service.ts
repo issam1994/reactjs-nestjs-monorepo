@@ -28,7 +28,7 @@ export class UsersService {
     // hash password before saving
     user.password = bcrypt.hashSync(user.password, 10);
     // attach role user
-    const roles = await this.rolesService.findAll();
+    const roles = await this.rolesService.findAllWithoutPagination();
     const roleUser = roles.find((role) => role.name == 'user');
     if (roleUser) user.roles = [roleUser];
 
