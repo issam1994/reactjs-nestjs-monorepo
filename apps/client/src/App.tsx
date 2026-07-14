@@ -12,7 +12,7 @@ function App() {
   const { getProfile } = useAuthStore();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getProfile({ onDone: () => setLoading(false), ingoreError: true });
+    getProfile({ onDone: () => setLoading(false), ignoreError: true });
   }, [getProfile]);
   if (loading) {
     return (

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -46,5 +47,14 @@ export class RolesController {
   @RequirePermissions('role:delete')
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);
+  }
+
+  @Put(':id/permissions')
+  @RequirePermissions('role:update')
+  updatePermissions(
+    @Param('id') id: string,
+    @Body('permissions') permissions: string[],
+  ) {
+    return this.rolesService.updatePermissions(+id, permissions);
   }
 }

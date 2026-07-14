@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
 import { GetRolesDto } from './dto/get-roles.dto';
+import { Permission } from 'src/permissions/entities/permission.entity';
 
 @Injectable()
 export class RolesService {
@@ -52,5 +53,16 @@ export class RolesService {
 
   remove(id: number) {
     return this.rolesRepository.delete(id);
+  }
+
+  async updatePermissions(id: number, permissions: string[]) {
+    const role = await this.rolesRepository.findOneBy({ id });
+    if (!role) {
+      throw new Error('Role not found');
+    }
+    role.permissions = permissions.map(
+      (permission) => ({ id: +permission }) as Permission,
+    );
+    return this.rolesRepository.save(role);
   }
 }
