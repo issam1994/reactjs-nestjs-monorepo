@@ -12,7 +12,7 @@ interface AuthStore {
   login: (values: LoginFormValues) => Promise<void>;
   register: (values: RegisterFormValues) => Promise<void>;
   logout: () => void;
-  getProfile: (onDone?: () => void) => void;
+  getProfile: (args: { onDone?: () => void; ingoreError?: boolean }) => void;
 }
 
 axios.defaults.baseURL = "http://localhost:3000";
@@ -49,20 +49,20 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const { data: authData } = await axios.post("/auth/login", values);
       handleToken(authData);
       // get profile
-      await get().getProfile();
+      await get().getProfile({});
     } catch (error) {
       message.error(requestMessageFormatter(error));
     } finally {
       set({ isLoading: false });
     }
   },
-  getProfile: async (onDone) => {
+  getProfile: async ({ onDone, ingoreError } = {}) => {
     set({ isLoading: true });
     try {
       const { data } = await axios.get("/auth/profile");
       set({ user: data, isLoading: false });
     } catch (error) {
-      message.error(requestMessageFormatter(error));
+      if (!ingoreError) message.error(requestMessageFormatter(error));
     } finally {
       set({ isLoading: false });
       if (onDone) onDone();
