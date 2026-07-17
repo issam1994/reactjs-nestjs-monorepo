@@ -9,6 +9,7 @@ import Dashboard from "../pages/Dashboard";
 import UsersPage from "../pages/UsersPage";
 import PermissionsPage from "../pages/PermissionsPage";
 import RolesPage from "../pages/RolesPage";
+import RolePermissionsPage from "../pages/RolePermissionsPage";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
           { path: "/users", Component: UsersPage },
           { path: "/permissions", Component: PermissionsPage },
           { path: "/roles", Component: RolesPage },
+          { path: "/role-permissions", Component: RolePermissionsPage },
         ],
       },
     ],

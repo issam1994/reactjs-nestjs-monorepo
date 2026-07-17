@@ -31,6 +31,12 @@ export class RolesController {
     return this.rolesService.findAll(query);
   }
 
+  @Get('all')
+  @RequirePermissions('role:read')
+  findAllWithPermissions() {
+    return this.rolesService.findAllWithPermissions();
+  }
+
   @Get(':id')
   @RequirePermissions('role:read')
   findOne(@Param('id') id: string) {

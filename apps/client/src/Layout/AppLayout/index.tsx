@@ -6,6 +6,7 @@ import {
   BarChartOutlined,
   KeyOutlined,
   UsergroupAddOutlined,
+  ApartmentOutlined,
 } from "@ant-design/icons";
 import { useAuthStore } from "../../store";
 import { NavLink, Outlet } from "react-router";
@@ -17,6 +18,11 @@ const menuItems = [
   { key: "/users", icon: <UsergroupAddOutlined />, label: "Users" },
   { key: "/roles", icon: <UserOutlined />, label: "Roles" },
   { key: "/permissions", icon: <KeyOutlined />, label: "Permissions" },
+  {
+    key: "/role-permissions",
+    icon: <ApartmentOutlined />,
+    label: "Role Permissions",
+  },
 ];
 
 const AppLayout: React.FC = () => {

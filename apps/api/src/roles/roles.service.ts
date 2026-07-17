@@ -43,6 +43,13 @@ export class RolesService {
     return this.rolesRepository.find();
   }
 
+  findAllWithPermissions() {
+    return this.rolesRepository.find({
+      relations: ['permissions'],
+      order: { name: 'ASC' },
+    });
+  }
+
   findOne(id: number) {
     return this.rolesRepository.findBy({ id });
   }
