@@ -1,34 +1,33 @@
 import React, { useState } from "react";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
-import {
-  UserOutlined,
-  DashboardOutlined,
-  BarChartOutlined,
-  KeyOutlined,
-  UsergroupAddOutlined,
-  ApartmentOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, DashboardOutlined } from "@ant-design/icons";
 import { useAuthStore } from "../../store";
 import { NavLink, Outlet } from "react-router";
+import { routes } from "../../router";
+import { hasPermission } from "../../permissions/permissions";
 
 const { Header, Sider, Content, Footer } = Layout;
-
-const menuItems = [
-  { key: "/dashboard", icon: <BarChartOutlined />, label: "Dashboard" },
-  { key: "/users", icon: <UsergroupAddOutlined />, label: "Users" },
-  { key: "/roles", icon: <UserOutlined />, label: "Roles" },
-  { key: "/permissions", icon: <KeyOutlined />, label: "Permissions" },
-  {
-    key: "/role-permissions",
-    icon: <ApartmentOutlined />,
-    label: "Role Permissions",
-  },
-];
 
 const AppLayout: React.FC = () => {
   const { user, logout } = useAuthStore();
   const [collapsed, setCollapsed] = useState(false);
-
+  const menuItems = routes
+    .find((route) => route.id === "app")
+    // first layer of children is the Layout (App), second layer of children is the actual routes, so we need to access the second layer of children to get the menu items
+    ?.children?.[0]?.children?.filter((child) => child.handle?.showInMenu)
+    .filter((item) => {
+      const requiredPermission = item.handle?.requiredPermission;
+      // Check if the user has the required permission for this route
+      if (requiredPermission) {
+        return user && hasPermission(user, requiredPermission);
+      }
+      return true; // No specific permission required, show the menu item
+    })
+    .map((child) => ({
+      key: child.path || "",
+      label: child.handle?.label || "",
+      icon: child.handle?.icon || null,
+    })) as { key: string; label: string; icon?: React.ReactNode }[];
   return (
     <Layout className="min-h-screen!">
       <Sider
