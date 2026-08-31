@@ -8,7 +8,7 @@ export type ResourceActionPermissions = {
   user: ResourcePermissionMap;
   permission: ResourcePermissionMap;
   role: ResourcePermissionMap;
-  rolesPermission: ResourcePermissionMap;
+  rolePermission: ResourcePermissionMap;
 };
 
 export const resourceActionPermissions: ResourceActionPermissions = {
@@ -30,11 +30,11 @@ export const resourceActionPermissions: ResourceActionPermissions = {
     update: "role:update",
     delete: "role:delete",
   },
-  rolesPermission: {
-    read: "roles-permission:read",
-    create: "roles-permission:create",
-    update: "roles-permission:update",
-    delete: "roles-permission:delete",
+  rolePermission: {
+    read: "role_permission:read",
+    create: "role_permission:create",
+    update: "role_permission:update",
+    delete: "role_permission:delete",
   },
 };
 

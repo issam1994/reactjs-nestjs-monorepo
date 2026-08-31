@@ -16,9 +16,10 @@ export default class PermissionsFactory {
     // create data
     const resources = Object.values(ResourceEnum);
     const actions = Object.values(ActionEnum);
-    const permissionsForAllResourcesAs2dArray = resources.map((resource) => {
+    const permissionsForAllResourcesAs2dArray = resources.map((resource, i) => {
       const permissionsForResource: Partial<Permission>[] = actions.map(
-        (action) => ({
+        (action, j) => ({
+          id: i * actions.length + j + 1,
           action,
           resource,
         }),

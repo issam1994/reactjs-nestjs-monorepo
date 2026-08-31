@@ -122,8 +122,7 @@ const routes: AppRouteObject[] = [
               showInMenu: true,
               label: "Role Permissions",
               icon: <ApartmentOutlined />,
-              requiredPermission:
-                resourceActionPermissions.rolesPermission.read,
+              requiredPermission: resourceActionPermissions.rolePermission.read,
             },
           },
         ],
